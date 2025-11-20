@@ -1,0 +1,36 @@
+{
+    "custom_labels": [
+        {
+            "type": "all good",
+            "label": "Operational",
+            "color": "#22c55e"
+        },
+        {
+            "type": "minor issue",
+            "label": "Minor Issue",
+            "color": "#6366f1"
+        },
+        {
+            "type": "working on it",
+            "label": "Degraded Performance",
+            "color": "#f97316"
+        },
+        {
+            "type": "maintenance",
+            "label": "Maintenance",
+            "color": "#38bdf8"
+        },
+        {
+            "type": "danger",
+            "label": "Major Outage",
+            "color": "#ef4444"
+        },
+        {
+            "type": "monitoring",
+            "label": "Monitoring",
+            "color": "#10b981"
+        }
+    ],
+    "statuses": [],
+    "overall_message": "All Systems Operational"
+}

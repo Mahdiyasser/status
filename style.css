@@ -1,0 +1,512 @@
+:root {
+  --radius: 12px;
+  --muted-dark: #a9b8c9;
+  --muted-light: #556073;
+  --accent: #2563eb;
+  --transition: 280ms ease;
+  --instant-transition: 0ms; /* Used for theme change */
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* --- Theme Variables --- */
+html.light {
+  color-scheme: light;
+  --bg-base: linear-gradient(180deg, #f6f8fb 0%, #eef2ff 60%);
+  --page-text: #071226;
+  --muted: var(--muted-light);
+  --card-bg: #ffffff;
+  --control-bg: rgba(11, 20, 32, 0.03);
+  --control-border: rgba(11, 20, 32, 0.06);
+  --shadow-color: rgba(2, 6, 23, 0.1);
+  --wash-mix-mode: hard-light; /* CRITICAL FIX: Hard-light blend mode for visible color wash in light mode */
+  --wash-opacity: 0.95; /* INCREASED OPACITY: For max visibility */
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg-base: linear-gradient(180deg, #071226 0%, #021025 60%);
+  --page-text: #e6eef8;
+  --muted: var(--muted-dark);
+  --card-bg: #071227;
+  --control-bg: rgba(255, 255, 255, 0.02);
+  --control-border: rgba(255, 255, 255, 0.04);
+  --shadow-color: rgba(2, 6, 23, 0.3);
+  --wash-mix-mode: screen; 
+  --wash-opacity: 0.6; 
+}
+
+/* --- Base Layout & Typography --- */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--page-text);
+  -webkit-font-smoothing: antialiased;
+  /* INSTANT TRANSITION: Use instant-transition for theme background/color changes */
+  transition: background var(--instant-transition), color var(--instant-transition);
+}
+
+/* Hide Scrollbar for aesthetic reasons */
+html { scrollbar-width: none; /* Firefox */ }
+::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
+
+.page-wrap {
+  max-width: 1100px;
+  margin: 28px auto;
+  padding: 20px;
+  position: relative;
+  z-index: 2; /* Ensures content is layered above the wash (z-index: 1) */
+}
+
+header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), #06b6d4);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.14);
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.sub {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* --- Controls & Dropdown Styling --- */
+.controls {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.04);
+  transition: transform 300ms ease, background 300ms ease, box-shadow 300ms ease;
+}
+
+.control:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+}
+
+input.search-input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--page-text);
+  width: 220px;
+  font-size: 14px;
+}
+
+.dropdown-control {
+  padding-left: 10px;
+}
+
+/* Modern Dropdown Styling (Fix for whitespace on right) */
+.tz-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--page-text);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  padding-right: 2px;
+  height: 100%;
+  outline: none;
+  min-width: 60px; /* Fixed width for better control */
+  width: 70px; 
+  /* INSTANT TRANSITION: Use instant-transition for theme color changes */
+  transition: color var(--instant-transition);
+}
+
+.dropdown-control svg {
+  color: var(--muted);
+}
+
+/* CRITICAL FIX: Styling for the options inside the select */
+.tz-select option {
+  background: var(--card-bg); /* Use card background for options */
+  color: var(--page-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: normal;
+  text-align: left; 
+  padding-right: 40px; /* Increased padding to eliminate excessive whitespace on the right */
+  white-space: nowrap;
+  font-family: monospace; /* Monospace font makes alignment cleaner */
+}
+
+.theme-toggle {
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  /* INSTANT TRANSITION: Use instant-transition for theme background/color changes */
+  transition: background var(--instant-transition), border-color var(--instant-transition);
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.04);
+}
+
+/* --- Banner & Page Wash --- */
+
+/* Page Wash: The global ambient color effect */
+.page-wash {
+  position: fixed;
+  inset: 0;
+  z-index: 1; /* Below content (z-index: 2) */
+  pointer-events: none;
+  transition: background 600ms ease, opacity 600ms ease;
+  opacity: var(--wash-opacity); 
+  filter: none;
+  mix-blend-mode: var(--wash-mix-mode); 
+  background: none; 
+}
+
+.banner {
+  margin-top: 10px;
+  padding: 18px;
+  border-radius: 12px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border: 2px solid transparent;
+  backdrop-filter: blur(10px);
+  transition: background 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+  box-shadow: 0 6px 30px var(--shadow-color);
+}
+
+.pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  color: white;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.overall-title {
+  font-weight: 900;
+  font-size: 17px;
+  transition: color 260ms ease, text-shadow 260ms ease;
+}
+
+.overall-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.banner-meta {
+  text-align: right;
+}
+
+.last-updated {
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.tz-note {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* --- Status Cards --- */
+.cards {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  width: 100%;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.08); /* Isolation: Slightly darker border for visibility against the wash */
+  box-shadow: 0 12px 30px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  transition: transform 260ms ease, box-shadow 260ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 35px var(--shadow-color);
+}
+
+.card-accent {
+  height: 8px;
+  width: 100%;
+  transition: background 260ms ease;
+}
+
+.card-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* background is controlled by JS with a much higher alpha for the accent color tint */
+  transition: background 260ms ease;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.title {
+  font-weight: 900;
+  font-size: 17px;
+  margin: 0;
+  color: var(--page-text);
+}
+
+.time {
+  color: var(--muted);
+  font-size: 13px;
+  min-width: 160px;
+  text-align: right;
+}
+
+.label {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  color: white;
+  align-self: flex-start;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+.desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--page-text);
+  max-height: 1000px; /* INCREASED MAX HEIGHT */
+  overflow: auto;
+  background: transparent;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.empty,
+.error {
+  padding: 28px;
+  border-radius: 12px;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px dashed rgba(0, 0, 0, 0.03);
+}
+
+footer {
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* --- Tablet/Small Desktop Optimization (Max 1100px) --- */
+@media (max-width: 1100px) {
+  .page-wrap {
+    /* Reduce side padding for slightly smaller screens */
+    padding: 16px;
+    margin: 20px auto;
+  }
+
+  /* Make the header elements breathe more */
+  header {
+    gap: 12px;
+  }
+}
+
+/* --- Mobile Optimization (Max 768px - Tablet Portrait/Large Phone Landscape) --- */
+@media (max-width: 768px) {
+  /* Adjust page wrapper for smaller screens */
+  .page-wrap {
+    padding: 12px;
+    margin: 16px auto;
+  }
+
+  /* Adjustments to Header/Logo Size */
+  .logo {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 17px;
+  }
+
+  /* Banner Adjustments */
+  .banner {
+    padding: 16px;
+    flex-wrap: wrap; /* Allow wrapping of elements */
+  }
+
+  .banner-meta {
+    text-align: left; /* Make text left-aligned on mobile */
+    margin-top: 8px; /* Add separation from main title */
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    color: var(--muted);
+  }
+  
+  .last-updated {
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Header and Controls Re-layout */
+  header {
+    flex-wrap: wrap; 
+    /* Keep logo, title block, and controls on the header line initially, 
+       but allow them to wrap. */
+    gap: 16px; /* Use default gap */
+  }
+
+  /* --- Logo Positioning (The Requested Change) --- */
+  .logo {
+    order: 2; /* Position the logo after the title block */
+    margin-left: auto; /* Push the logo to the far right */
+  }
+
+  /* Keep Title Block on the left */
+  header > div:nth-child(2) {
+    order: 1; /* Ensure the title block stays first (left) */
+    flex-grow: 1; /* Allows the title block to take up remaining space before the logo */
+  }
+  
+  /* Controls Area: Pushed to the second line, full width */
+  .controls {
+    order: 3; /* Push controls down below the logo/title line */
+    width: 100%;
+    margin-left: 0; /* Remove the desktop 'auto' margin */
+    margin-top: 8px;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .control.search-control {
+    /* Full width search bar */
+    width: 100%;
+    order: 1; 
+    padding: 10px 12px;
+  }
+
+  input.search-input {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .dropdown-control {
+    order: 2;
+  }
+
+  .theme-toggle {
+    order: 3;
+  }
+
+  /* Card and Content Adjustments */
+  .card-header {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .time {
+    font-size: 12px;
+    text-align: left; 
+    min-width: unset; 
+  }
+
+  .label {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* --- Very Small Mobile Optimization (Max 480px) --- */
+@media (max-width: 480px) {
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  h1 {
+    font-size: 16px;
+  }
+  
+  .sub {
+    font-size: 12px;
+  }
+
+  /* Banner adjustments for very small screens */
+  .overall-title {
+    font-size: 16px;
+  }
+  
+  .pill {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .banner-meta {
+    flex-direction: column; 
+    gap: 4px;
+  }
+}
