@@ -31,6 +31,31 @@
             "color": "#10b981"
         }
     ],
-    "statuses": [],
+    "statuses": [
+        {
+            "id": "6929b7de8f76b",
+            "title": "The Nexus Blog",
+            "type": "all good",
+            "label_override": "",
+            "description": "All Systems Operational Nothing Is Down<br>The Website<br><a href=\"https://the-nexus-blog.is-great.org\">https://the-nexus-blog.is-great.org</a><br>",
+            "timestamp": "2025-11-28 14:55:49"
+        },
+        {
+            "id": "6929b7aa96397",
+            "title": "The Main Website",
+            "type": "all good",
+            "label_override": "",
+            "description": "All Systems Operational Nothing Is Down<br>The Website<br><a href=\"https://mahdiyasser.site\">https://mahdiyasser.site</a><br>",
+            "timestamp": "2025-11-28 14:54:34"
+        },
+        {
+            "id": "6929b774a8671",
+            "title": "The Secret Keeper",
+            "type": "all good",
+            "label_override": "",
+            "description": "All Systems Operational Nothing is Down<br>The Website<br><a href=\"https://keeper.mahdiyasser.site\">https://keeper.mahdiyasser.site</a><br>The App<br><a href=\"https://app-keeper.mahdiyasser.site/\">https://app-keeper.mahdiyasser.site/</a><br>",
+            "timestamp": "2025-11-28 14:53:40"
+        }
+    ],
     "overall_message": "All Systems Operational"
 }
